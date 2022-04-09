@@ -1,0 +1,28 @@
+:root {
+    --grid-block-size: 10rem;
+    --grid-block-background: #E5E7EB;
+    --grid-gap: 0.2rem;
+}
+
+body {
+    background-color: white;
+}
+
+.game-grid {
+    width: fit-content;
+    display: grid;
+    grid-template-columns: repeat(3, var(--grid-block-size));
+    grid-template-rows: repeat(3, var(--grid-block-size));
+    gap: var(--grid-gap);
+}
+
+.grid-block {
+    box-sizing: border-box;
+    background-color: var(--grid-block-background);
+    width: var(--grid-block-size);
+    height: var(--grid-block-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(var(--grid-block-size)*0.5);
+}
