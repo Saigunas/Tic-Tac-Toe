@@ -6,6 +6,14 @@
 
 body {
     background-color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+.title {
+    text-align: center;
+    font-size: 2.5em;
+    padding: 1em;
 }
 
 .game-grid {
@@ -25,6 +33,10 @@ body {
     align-items: center;
     justify-content: center;
     font-size: calc(var(--grid-block-size) * 0.5);
+}
+
+.disabled {
+    display: none;
 }
 
 @media (min-width:320px)  { /* smartphones, portrait iPhone, portrait 480x320 phones (Android) */ }

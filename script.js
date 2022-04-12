@@ -1,5 +1,8 @@
 const Gameboard = (() => {
-        
+
+    //Start webpage with game disabled
+    const gameGrid = document.querySelector('.game-grid');
+    gameGrid.classList.add('disabled');
     const gridBlocks = document.querySelectorAll('.grid-block');
     
     let gameboard = ['', '', '',
