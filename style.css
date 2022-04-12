@@ -1,4 +1,21 @@
 :root {
+    --title-font-size: 3.3rem;
+    --title-padding: 5vh;
+
+    --selection-menu-margin: 10vh;
+    --selection-menu-font-size: 1.8rem;
+    --selection-item-margin: 1vh;
+    --selection-item-border-radius: 5px;
+    --selection-item-padding: 0.3em 0.5em;
+    --selection-button-color: red;
+    --selection-button-focus-color: black;
+
+    --vs-text-color: red;
+
+    --input-background: grey;
+    --input-border: black;
+    --input-font-color: black;
+
     --grid-block-size: 10vw;
     --grid-block-background: #E5E7EB;
     --grid-gap: 0.2rem;
@@ -8,12 +25,53 @@ body {
     background-color: white;
     display: flex;
     flex-direction: column;
+    align-items: center;
+}
+
+.selection-menu {
+    width:50vw;
+    margin-top: var(--selection-menu-margin);
+    font-size: var(--selection-menu-font-size);
+    display: flex;
+    flex-direction: column;
+}
+
+.selection-menu input {
+    font-size: var(--selection-menu-font-size);
+    border-radius: var(--selection-item-border-radius);
+    box-shadow: none;
+    box-sizing: border-box;
+    padding: var(--selection-item-padding);
+    margin-top: var(--selection-item-margin);
+    background-color: var(--input-background);
+    border: none;
+    /* border: 2px solid var(--input-border); */
+    font-family: inherit;
+    color: var(--input-font-color);
+}
+
+.selection-menu .vs-text {
+    text-align: center;
+    color: var(--vs-text-color);
+    padding: var(--title-padding) 0px;
+    font-size: 3.5rem;
+}
+
+.selection-menu .p2-button, .ai-button {
+    background-color: var(--selection-button-color);
+    padding: var(--selection-item-padding);
+    border-radius: var(--selection-item-border-radius);
+}
+
+
+.selection-menu .ai-button {
+    margin-top: var(--selection-item-margin);
 }
 
 .title {
     text-align: center;
-    font-size: 2.5em;
-    padding: 1em;
+    font-size: var(--title-font-size);
+    padding: var(--title-padding) 0px;
 }
 
 .game-grid {
