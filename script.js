@@ -42,6 +42,35 @@ const Gameboard = (() => {
         if(gameboard[index] === '') {
             gameboard[index] = TurnManager.changeTurn().sign;
             showGameBoard();
+            if(checkForWinner() !== null) {
+                alert(checkForWinner());
+            }
         }
     }
+
+    function checkForWinner() {
+        //Vertical checks
+        for(let i = 0; i < 3; i++) {
+            if(gameboard[i] === '') continue;
+            if(gameboard[i] === gameboard[i+3] && gameboard[i] === gameboard[i+6])
+                return gameboard[i];
+        }
+        //Horizontal checks
+        for(let j = 0, i = 0; i < 3; i++, j = j + 3) {
+            if(gameboard[j] === '') continue;
+            if(gameboard[j] === gameboard[j+1] && gameboard[j] === gameboard[j+2])
+                return gameboard[j];
+        }
+        //Diagnol checks
+        if(gameboard[4] === '') return null;
+        if(gameboard[0] === gameboard[4] && gameboard[0] === gameboard[8]) {
+            return gameboard[0];
+        }
+        if(gameboard[2] === gameboard[4] && gameboard[2] == gameboard[6]) {
+            return gameboard[0];
+        }
+
+        return null;
+    }
+
 })();
