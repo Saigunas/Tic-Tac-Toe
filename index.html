@@ -13,18 +13,21 @@
     <h1 class="title">Tic-Tac-Toe</h1>
 
     <div class="selection-menu">
-        <p class="p1">Player 1</p>
-        <input class="p1-name" type="text" placeholder="Morgana">
+        <label for='p1-name' class="p1">Player 1</label>
+        <input id='p1-name' class="p1-name" type="text" placeholder="Morgana" maxlength="10">
         
         <p class="vs-text">VS</p>
         <vs-select>
-            <div class="p2-button">
-                <p>Player 2</p>
+            <div class="p2-button selection-button selected-button">
+                <label for='p2-name'>Player 2</label>
+                <input id='p2-name' class="p2-name" type="text" placeholder="Joker" maxlength="10">
             </div>
-            <div class="ai-button">
+            <div class="ai-button selection-button">
                 <p>AI</p>
             </div>
         </vs-select>
+
+        <button class="start-game">START</button>
     </div>
 
     <div class="game-grid">

@@ -1,8 +1,66 @@
+const SelectionMenuSetup = (() => {
+
+    const p1Name = document.querySelector('.p1-name');
+    const p2Name = document.querySelector('.p2-name');
+
+    const p2Button = document.querySelector('.p2-button');
+    p2Button.addEventListener('click', p2VsToggle);
+
+    const aiButton = document.querySelector('.ai-button');
+    aiButton.addEventListener('click', aiVsToggle);
+
+    const startGameButton = document.querySelector('.start-game');
+    startGameButton.addEventListener('click', startGame);
+
+    function aiVsToggle(e) {
+
+        if (p2Name.classList.contains('disabled')) {
+            
+            p2Name.classList.remove('disabled');
+            p2Button.classList.add('selected-button');
+            aiButton.classList.remove('selected-button');
+            return;
+        }
+        
+        p2Name.classList.add('disabled');
+        p2Button.classList.remove('selected-button');
+        aiButton.classList.add('selected-button');
+            
+    }
+
+    function p2VsToggle(e) {
+
+        if (p2Name.classList.contains('disabled')) {
+            p2Name.classList.remove('disabled');
+            p2Button.classList.add('selected-button');
+            aiButton.classList.remove('selected-button');
+            return;
+        }
+            
+    }
+
+    function startGame() {
+        const selectionMenu = document.querySelector('.selection-menu');
+        selectionMenu.classList.add('disabled');
+        selectionMenu.addEventListener('transitionend', () => {
+            selectionMenu.style.display = 'none';
+            Gameboard.showBoard();});
+    }
+
+
+})();
+
 const Gameboard = (() => {
 
     //Start webpage with game disabled
     const gameGrid = document.querySelector('.game-grid');
     gameGrid.classList.add('disabled');
+
+    function showBoard() {
+        gameGrid.classList.remove('disabled');
+        gameGrid.classList.add('grid-enable');
+    }
+
     const gridBlocks = document.querySelectorAll('.grid-block');
     
     let gameboard = ['', '', '',
@@ -75,5 +133,9 @@ const Gameboard = (() => {
 
         return null;
     }
+
+
+
+    return {showBoard}
 
 })();
