@@ -98,13 +98,19 @@ const Gameboard = (() => {
     })(p1, p2);
 
     gridBlocks.forEach(block => block.addEventListener('click', checkBlock));
+    
     function checkBlock(e) {
         let index = e.target.getAttribute('data-index');
         if(gameboard[index] === '') {
+            
             gameboard[index] = TurnManager.changeTurn().sign;
             showGameBoard();
+
             if(checkForWinner() !== null) {
-                alert(checkForWinner());
+                const winnerAnnounce = document.querySelector('.winner-announce');
+                winnerAnnounce.textContent = `${checkForWinner().name} WON!`;
+                
+                gridBlocks.forEach(block => block.removeEventListener('click', checkBlock));
             }
         }
     }
@@ -114,21 +120,28 @@ const Gameboard = (() => {
         for(let i = 0; i < 3; i++) {
             if(gameboard[i] === '') continue;
             if(gameboard[i] === gameboard[i+3] && gameboard[i] === gameboard[i+6])
-                return gameboard[i];
+                return checkWhoseWinner(gameboard[i]);
         }
         //Horizontal checks
         for(let j = 0, i = 0; i < 3; i++, j = j + 3) {
             if(gameboard[j] === '') continue;
             if(gameboard[j] === gameboard[j+1] && gameboard[j] === gameboard[j+2])
-                return gameboard[j];
+                return checkWhoseWinner(gameboard[j]);
         }
         //Diagnol checks
         if(gameboard[4] === '') return null;
         if(gameboard[0] === gameboard[4] && gameboard[0] === gameboard[8]) {
-            return gameboard[0];
+            return checkWhoseWinner(gameboard[0]);
         }
         if(gameboard[2] === gameboard[4] && gameboard[2] == gameboard[6]) {
-            return gameboard[0];
+            return checkWhoseWinner(gameboard[0]);
+        }
+
+        function checkWhoseWinner(sign) {
+            if(p1.sign === sign) {
+                return p1;
+            }
+            return p2;
         }
 
         return null;
