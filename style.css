@@ -8,22 +8,23 @@
     --selection-item-margin: 1vh;
     --selection-item-border-radius: 5px;
     --selection-item-padding: 0.3em 0.5em;
-    --selection-button-color: red;
-    --selection-selected-button-color: rgb(255, 172, 172);    
+    --selection-button-color: #8FDBF5;
+    --selection-selected-button-color: #B4E7F8;    
     --selection-button-focus-color: black;
 
-    --vs-text-color: red;
+    --vs-text-color: #EF476F;
     
-    --input-background: grey;
-    --input-border: black;
+    --input-background: #ECF9FD;
+    --p1-input-border: #073B4C;
+    --input-border: #7CD5F3;
     --input-font-color: black;
     
-    --button-background: green;
-    --button-hover-background: rgb(156, 182, 156);
+    --button-background: #06D6A0;
+    --button-hover-background: #06D6A0;
     --button-font-size: 2.1rem;
 
     --grid-block-size: 25vw;
-    --grid-block-background: #E5E7EB;
+    --grid-block-background: #F7B6C4;
     --grid-gap: 0.2rem;
 }
 
@@ -32,7 +33,7 @@ body {
     font-family: 'Amatic SC', cursive;
     font-weight: 700;
 
-    background-color: white;
+    background-color: #ECF9FD;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -61,7 +62,7 @@ body {
     opacity: 0%;
 }
 
-.selection-menu.disabled .start-game {
+.start-game {
     transition: 0.3s;
 }
 
@@ -87,6 +88,10 @@ body {
     width: 100%;
 }
 
+.selection-menu .p1-name {
+    border: 2px solid var(--p1-input-border);
+}
+
 .selection-menu .vs-text {
     text-align: center;
     color: var(--vs-text-color);
@@ -102,7 +107,7 @@ body {
 
 .selection-menu .selected-button {
     background-color: var(--selection-selected-button-color);
-    /* border: 2px solid var(--input-border); */
+    border: 2px solid var(--input-border);
 }
 
 .p2-name {
@@ -179,7 +184,7 @@ body {
 
 .winner-announce {
     margin-top: var(--selection-menu-margin);
-    font-size: var(--selection-menu-font-size);
+    font-size: 3em;
 }
 
 .restart-game {
@@ -198,8 +203,44 @@ body {
     display: none;
 }
 
-@media (min-width:320px)  { /* smartphones, portrait iPhone, portrait 480x320 phones (Android) */ }
-@media (min-width:480px)  { /* smartphones, Android phones, landscape iPhone */ }
-@media (min-width:600px)  { /* portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) */ }
-@media (min-width:801px)  { /* tablet, landscape iPad, lo-res laptops ands desktops */ }
-@media (min-width:1025px) { /* big landscape tablets, laptops, and desktops */ }
+@media (min-width:1025px) {
+    :root {
+        --title-font-size: 10rem;
+        --title-padding: 5vh;
+    
+        --selection-menu-margin: 5vh;
+        --selection-menu-font-size: 5rem;
+        --selection-item-margin: 1vh;
+        --selection-item-border-radius: 5px;
+        --selection-item-padding: 0.3em 0.5em;
+        --selection-button-color: #8FDBF5;
+        --selection-selected-button-color: #B4E7F8;    
+        --selection-button-focus-color: black;
+    
+        --vs-text-color: #EF476F;
+        
+        --input-background: #ECF9FD;
+        --p1-input-border: #073B4C;
+        --input-border: #7CD5F3;
+        --input-font-color: black;
+        
+        --button-background: #06D6A0;
+        --button-hover-background: #06D6A0;
+        --button-font-size: 6rem;
+
+        --grid-block-size: 12vh;
+    }
+    
+    .selection-menu .vs-text {
+        font-size: 7rem;
+    }
+
+    .winner-announce {
+        font-size: 8rem;
+    }
+
+    .selection-menu {
+        width:40vw;
+        max-width: 15em;
+    }
+}
