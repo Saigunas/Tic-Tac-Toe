@@ -56,13 +56,18 @@ const SelectionMenuSetup = (() => {
         const selectionMenu = document.querySelector('.selection-menu');
         selectionMenu.classList.add('disabled');   
 
+        let didTransition = false;
         selectionMenu.addEventListener('transitionend', () => {
-            selectionMenu.style.display = 'none';
-            if(selectedVs === "ai") {
-                Gameboard.showBoardAi(p1Name.value);
-                return;
+            if(!didTransition) {
+                didTransition = true;
+
+                selectionMenu.style.display = 'none';
+                if(selectedVs === "ai") {
+                    Gameboard.showBoardAi(p1Name.value);
+                    return;
+                }
+                Gameboard.showBoardP2(p1Name.value, p2Name.value);
             }
-            Gameboard.showBoardP2(p1Name.value, p2Name.value);
         });
     }
     
@@ -71,11 +76,12 @@ const SelectionMenuSetup = (() => {
 
 const Gameboard = (() => {
 
+    let aiGame = false;
     const gameGrid = document.querySelector('.game-grid');
 
-    let aiGame = false;
     //selects game mode based on who it is playing against
     function showBoardP2(p1Name, p2Name) {
+        TurnManager.initializeGame(aiGame);
         p1.name = p1Name;
         p2.name = p2Name;
         gameGrid.classList.remove('disabled');
@@ -85,15 +91,16 @@ const Gameboard = (() => {
     }
 
     function showBoardAi(p1Name) {
-        console.log('ai');
+        aiGame = true;
+        TurnManager.initializeGame(aiGame);
         p1.name = p1Name;
         p2.name = "AI";
         gameGrid.classList.remove('disabled');
         restartButton.classList.remove('disabled');
         restartButton.classList.add('grid-enable');
         gameGrid.classList.add('grid-enable');
-        aiGame = true;
     }
+
 
     const gridBlocks = document.querySelectorAll('.grid-block');
     
@@ -116,7 +123,6 @@ const Gameboard = (() => {
     let p2 = Player("Player 2", "O");
 
 
-
     const restartButton = document.querySelector('.restart-game');
     restartButton.addEventListener('click', () => {
         gameboard = ['', '', '',
@@ -126,22 +132,27 @@ const Gameboard = (() => {
 
         const winnerAnnounce = document.querySelector('.winner-announce');
         winnerAnnounce.textContent = '';
-        TurnManager.initializeGame();        
+        TurnManager.initializeGame(aiGame);        
     });
 
 
     
-    const TurnManager = ((p1, p2, aiGame, showGameBoard) => {
+    const TurnManager = ((p1, p2, showGameBoard) => {
         
+        let aiGame;
         let whoseTurn;
 
-        function initializeGame() {
+        function initializeGame(vsAi) {
             whoseTurn = p1;
             gridBlocks.forEach(block => block.addEventListener('click', checkBlock));
+            aiGame = vsAi;
         }
-        initializeGame();
 
         function changeTurn() {
+            if(aiGame === true) {
+                playAi();
+                return;
+            }
             if(whoseTurn === p1) 
                 whoseTurn = p2;
             else
@@ -154,14 +165,25 @@ const Gameboard = (() => {
                 
                 gameboard[index] = whoseTurn.sign;
                 showGameBoard();
+                if(winnerCheck()) {
+                    return;
+                }
                 changeTurn();
-                winnerCheck();
             }
         }
     
 
         function playAi() {
-
+            let emptySpaceFound = false;
+            while(!emptySpaceFound) {
+                let blockOnGrid = Math.floor(Math.random() * gameboard.length);
+                if(gameboard[blockOnGrid] === '') {
+                    gameboard[blockOnGrid] = p2.sign;
+                    showGameBoard();
+                    winnerCheck();
+                    emptySpaceFound = true;
+                }
+            }
         }
 
 
@@ -173,12 +195,13 @@ const Gameboard = (() => {
             if(winner === "draw") {
                 winnerAnnounce.textContent = "IT'S A DRAW!";
                 gridBlocks.forEach(block => block.removeEventListener('click', checkBlock));
-                return;
+                return true;
             }
             
             if(winner !== null) {
                 winnerAnnounce.textContent = `${winner.name} WON!`;
                 gridBlocks.forEach(block => block.removeEventListener('click', checkBlock));
+                return true;
             }
     
     
@@ -220,9 +243,9 @@ const Gameboard = (() => {
             }
         }
 
-        return {initializeGame};
+        return {initializeGame, aiGame};
 
-    })(p1, p2, aiGame, showGameBoard);
+    })(p1, p2, showGameBoard);
 
 
 
