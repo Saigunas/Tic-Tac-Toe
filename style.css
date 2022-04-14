@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&display=swap');
 :root {
     --title-font-size: 3.3rem;
     --title-padding: 5vh;
@@ -19,17 +20,23 @@
     
     --button-background: green;
     --button-hover-background: rgb(156, 182, 156);
-    
+    --button-font-size: 2.1rem;
+
     --grid-block-size: 25vw;
     --grid-block-background: #E5E7EB;
     --grid-gap: 0.2rem;
 }
 
+
 body {
+    font-family: 'Amatic SC', cursive;
+    font-weight: 700;
+
     background-color: white;
     display: flex;
     flex-direction: column;
     align-items: center;
+    min-height: 100vh;
 }
 
 .title {
@@ -115,8 +122,8 @@ body {
     margin-top: var(--selection-item-margin);
 }
 
-.selection-menu .start-game {
-    font-size: var(--selection-menu-font-size);
+.selection-menu .start-game, .restart-game {
+    font-size: var(--button-font-size);
     border-radius: var(--selection-item-border-radius);
     box-shadow: none;
     box-sizing: border-box;
@@ -125,6 +132,7 @@ body {
     background-color: var(--button-background);
     border: none;
     font-family: inherit;
+    font-weight: 700;
     color: var(--input-font-color);
     width: 100%;
 }
@@ -167,6 +175,23 @@ body {
     align-items: center;
     justify-content: center;
     font-size: calc(var(--grid-block-size) * 0.5);
+}
+
+.winner-announce {
+    margin-top: var(--selection-menu-margin);
+    font-size: var(--selection-menu-font-size);
+}
+
+.restart-game {
+    margin-top: auto;
+    margin-bottom: 5vh;
+
+    box-sizing: border-box;
+    width: 6em;
+}
+
+.restart-game:hover {
+    cursor: pointer;
 }
 
 .disabled {

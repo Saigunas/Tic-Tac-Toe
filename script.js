@@ -12,6 +12,8 @@ const SelectionMenuSetup = (() => {
     const startGameButton = document.querySelector('.start-game');
     startGameButton.addEventListener('click', startGame);
 
+    let selectedVs = "p2";
+
     function aiVsToggle(e) {
 
         if (p2Name.classList.contains('disabled')) {
@@ -19,13 +21,16 @@ const SelectionMenuSetup = (() => {
             p2Name.classList.remove('disabled');
             p2Button.classList.add('selected-button');
             aiButton.classList.remove('selected-button');
+            selectedVs = "p2";
+
             return;
         }
         
         p2Name.classList.add('disabled');
         p2Button.classList.remove('selected-button');
         aiButton.classList.add('selected-button');
-            
+        selectedVs = "ai";
+        
     }
 
     function p2VsToggle(e) {
@@ -34,31 +39,60 @@ const SelectionMenuSetup = (() => {
             p2Name.classList.remove('disabled');
             p2Button.classList.add('selected-button');
             aiButton.classList.remove('selected-button');
+            selectedVs = "ai";
             return;
         }
-            
+        selectedVs = "p2";
     }
 
     function startGame() {
+        if(p1Name.value === '') {
+            p1Name.value = "Player 1"
+        }
+        if(p2Name.value === '') {
+            p2Name.value = "Player 2"
+        }
+
         const selectionMenu = document.querySelector('.selection-menu');
-        selectionMenu.classList.add('disabled');
+        selectionMenu.classList.add('disabled');   
+
         selectionMenu.addEventListener('transitionend', () => {
             selectionMenu.style.display = 'none';
-            Gameboard.showBoard();});
+            if(selectedVs === "ai") {
+                Gameboard.showBoardAi(p1Name.value);
+                return;
+            }
+            Gameboard.showBoardP2(p1Name.value, p2Name.value);
+        });
     }
-
-
+    
+    
 })();
 
 const Gameboard = (() => {
 
-    //Start webpage with game disabled
     const gameGrid = document.querySelector('.game-grid');
-    gameGrid.classList.add('disabled');
 
-    function showBoard() {
+    let aiGame = false;
+    //selects game mode based on who it is playing against
+    function showBoardP2(p1Name, p2Name) {
+        p1.name = p1Name;
+        p2.name = p2Name;
         gameGrid.classList.remove('disabled');
+        restartButton.classList.remove('disabled');
+        restartButton.classList.add('grid-enable');
         gameGrid.classList.add('grid-enable');
+    }
+
+    function showBoardAi(p1Name) {
+        console.log('ai');
+        p1.name = p1Name;
+        p2.name = "AI";
+        gameGrid.classList.remove('disabled');
+        restartButton.classList.remove('disabled');
+        restartButton.classList.add('grid-enable');
+        gameGrid.classList.add('grid-enable');
+        aiGame = true;
     }
 
     const gridBlocks = document.querySelectorAll('.grid-block');
@@ -78,77 +112,122 @@ const Gameboard = (() => {
         return {name, sign};
     };
 
-    let p1 = Player("Morgana", 'M');
-    let p2 = Player("Ike", "I");
+    let p1 = Player("Player 1", 'X');
+    let p2 = Player("Player 2", "O");
+
+
+
+    const restartButton = document.querySelector('.restart-game');
+    restartButton.addEventListener('click', () => {
+        gameboard = ['', '', '',
+                    '', '', '',
+                    '', '', ''];
+        showGameBoard();
+
+        const winnerAnnounce = document.querySelector('.winner-announce');
+        winnerAnnounce.textContent = '';
+        TurnManager.initializeGame();        
+    });
+
+
     
-    const TurnManager = ((p1, p2) => {
-        let whoseTurn = p2;
+    const TurnManager = ((p1, p2, aiGame, showGameBoard) => {
+        
+        let whoseTurn;
+
+        function initializeGame() {
+            whoseTurn = p1;
+            gridBlocks.forEach(block => block.addEventListener('click', checkBlock));
+        }
+        initializeGame();
 
         function changeTurn() {
             if(whoseTurn === p1) 
                 whoseTurn = p2;
             else
                 whoseTurn = p1;
-
-            return whoseTurn;
         }
 
-        return {changeTurn}
-
-    })(p1, p2);
-
-    gridBlocks.forEach(block => block.addEventListener('click', checkBlock));
-    
-    function checkBlock(e) {
-        let index = e.target.getAttribute('data-index');
-        if(gameboard[index] === '') {
-            
-            gameboard[index] = TurnManager.changeTurn().sign;
-            showGameBoard();
-
-            if(checkForWinner() !== null) {
-                const winnerAnnounce = document.querySelector('.winner-announce');
-                winnerAnnounce.textContent = `${checkForWinner().name} WON!`;
+        function checkBlock(e) {
+            let index = e.target.getAttribute('data-index');
+            if(gameboard[index] === '') {
                 
+                gameboard[index] = whoseTurn.sign;
+                showGameBoard();
+                changeTurn();
+                winnerCheck();
+            }
+        }
+    
+
+        function playAi() {
+
+        }
+
+
+        function winnerCheck() {
+
+            const winnerAnnounce = document.querySelector('.winner-announce');
+            let winner = checkForWinner();
+    
+            if(winner === "draw") {
+                winnerAnnounce.textContent = "IT'S A DRAW!";
+                gridBlocks.forEach(block => block.removeEventListener('click', checkBlock));
+                return;
+            }
+            
+            if(winner !== null) {
+                winnerAnnounce.textContent = `${winner.name} WON!`;
                 gridBlocks.forEach(block => block.removeEventListener('click', checkBlock));
             }
-        }
-    }
-
-    function checkForWinner() {
-        //Vertical checks
-        for(let i = 0; i < 3; i++) {
-            if(gameboard[i] === '') continue;
-            if(gameboard[i] === gameboard[i+3] && gameboard[i] === gameboard[i+6])
-                return checkWhoseWinner(gameboard[i]);
-        }
-        //Horizontal checks
-        for(let j = 0, i = 0; i < 3; i++, j = j + 3) {
-            if(gameboard[j] === '') continue;
-            if(gameboard[j] === gameboard[j+1] && gameboard[j] === gameboard[j+2])
-                return checkWhoseWinner(gameboard[j]);
-        }
-        //Diagnol checks
-        if(gameboard[4] === '') return null;
-        if(gameboard[0] === gameboard[4] && gameboard[0] === gameboard[8]) {
-            return checkWhoseWinner(gameboard[0]);
-        }
-        if(gameboard[2] === gameboard[4] && gameboard[2] == gameboard[6]) {
-            return checkWhoseWinner(gameboard[0]);
-        }
-
-        function checkWhoseWinner(sign) {
-            if(p1.sign === sign) {
-                return p1;
+    
+    
+            function checkForWinner() {
+    
+                //Vertical checks
+                for(let i = 0; i < 3; i++) {
+                    if(gameboard[i] === '') continue;
+                    if(gameboard[i] === gameboard[i+3] && gameboard[i] === gameboard[i+6])
+                        return checkWhoseWinner(gameboard[i]);
+                }
+                //Horizontal checks
+                for(let j = 0, i = 0; i < 3; i++, j = j + 3) {
+                    if(gameboard[j] === '') continue;
+                    if(gameboard[j] === gameboard[j+1] && gameboard[j] === gameboard[j+2])
+                        return checkWhoseWinner(gameboard[j]);
+                }
+                //Diagnol checks
+                if(gameboard[4] === '') return null;
+                if(gameboard[0] === gameboard[4] && gameboard[0] === gameboard[8]) {
+                    return checkWhoseWinner(gameboard[0]);
+                }
+                if(gameboard[2] === gameboard[4] && gameboard[2] == gameboard[6]) {
+                    return checkWhoseWinner(gameboard[0]);
+                }
+    
+                function checkWhoseWinner(sign) {
+                    if(p1.sign === sign) {
+                        return p1;
+                    }
+                    return p2;
+                }
+    
+                if(!gameboard.includes('')) {
+                    return "draw";
+                }
+                
+                return null;
             }
-            return p2;
         }
 
-        return null;
-    }
+        return {initializeGame};
+
+    })(p1, p2, aiGame, showGameBoard);
 
 
 
-    return {showBoard}
+
+
+    return {showBoardP2, showBoardAi}
 
 })();
